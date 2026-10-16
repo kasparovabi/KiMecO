@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+
+### Fixed
+- Postprocessing (`kmopp`) simulations no longer fail with `ValueError: Missing rates or tbl_map for PES 0` when the rate coefficients of the requested ensembles are already stored in `KIN_DB` for every postprocessing (P, T) condition. `Extrapolate` overrode `run_simulation()` without reloading the rates from `KIN_DB` (`RateCo.load_rates_from_db`), so the reuse branch introduced in 1.1.2 wrote every simulation script with empty `rates_by_pes`/`tbl_map_by_pes`, and each simulation was resubmitted indefinitely. The override is removed and `Extrapolate` now uses `CoreRun.run_simulation()`, which loads the stored rates on the postprocessing grid before writing the scripts. New CI test `tests/unit/test_extrapolate_run_simulation_ci.py`.
+
+
 ## [1.1.7] - 2026-08-27
 
 ### Added
